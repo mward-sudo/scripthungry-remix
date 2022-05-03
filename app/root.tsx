@@ -12,6 +12,7 @@ import {
 import { Footer } from './components/footer'
 import { MobileDrawer } from './components/navigation/mobile-drawer'
 import { Nav } from './components/navigation/nav'
+import { site } from './config'
 import type {
   GetNavigationQuery,
   Graphcms_NavigationLink,
@@ -20,16 +21,36 @@ import { GetNavigation } from './generated/graphql.server'
 import { graphQlClient } from './lib/graphql.server'
 import styles from './styles/app.css'
 
-export const meta: MetaFunction = () => ({
+export const meta: MetaFunction = ({ location }) => ({
   charset: 'utf-8',
-  title: 'New Remix App',
+  title: `Super fast cloud web sites | ${site.name}`,
+  description: site.description,
+  robots: 'index, follow',
+  canonical: `${site.url}${location.pathname}`,
   viewport: 'width=device-width,initial-scale=1',
 })
 
 export const links = () => {
   return [
     { rel: 'stylesheet', href: styles },
-    { rel: 'preconnect', href: 'https://res.cloudinary.com' },
+    {
+      rel: 'apple-touch-icon',
+      sizes: '180x180',
+      href: '/apple-touch-icon.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '32x32',
+      href: '/favicon-32x32.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '16x16',
+      href: '/favicon-16x16.png',
+    },
+    { rel: 'manifest', href: '/site.webmanifest' },
   ]
 }
 

@@ -1,4 +1,8 @@
-import type { HeadersFunction, LoaderFunction } from '@remix-run/node'
+import type {
+  HeadersFunction,
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useCatch, useLoaderData } from '@remix-run/react'
 import type { CatchBoundaryComponent } from '@remix-run/react/routeModules'
@@ -6,6 +10,7 @@ import invariant from 'tiny-invariant'
 
 import { LoadNewUser } from '~/components/github-stats/load-new-user'
 import { UserCard } from '~/components/github-stats/user-card'
+import { site } from '~/config'
 import type {
   GithubUserFragment,
   GitHubUserQuery,
@@ -15,6 +20,12 @@ import { graphQlClient } from '~/lib/graphql.server'
 
 export const headers: HeadersFunction = () => ({
   'Cache-Control': 's-maxage=360, stale-while-revalidate=3600',
+  Link: '<https://avatars.githubusercontent.com>; rel="preconnect"',
+})
+
+export const meta: MetaFunction = ({ data }: { data: LoaderData }) => ({
+  title: getPageTitle(data),
+  description: data?.githubUserData.github?.user?.bio,
 })
 
 type LoaderData = {
@@ -80,6 +91,23 @@ export const CatchBoundary: CatchBoundaryComponent = () => {
       </div>
     </div>
   )
+}
+
+const getPageTitle = (data: LoaderData) => {
+  try {
+    const title: Record<number, string>[] = []
+    if (data.githubUserData.github?.user?.name) {
+      title.push(data.githubUserData.github.user.name)
+    }
+    if (data.githubUserData.github?.user?.login) {
+      title.push(data.githubUserData.github.user.login)
+    }
+    title.push(`Github Profile | ${site.name}`)
+
+    return title.join(' | ')
+  } catch (error) {
+    return `Github User Not Found | Github Profile | ${site.name}`
+  }
 }
 
 export default Github
