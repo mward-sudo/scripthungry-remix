@@ -11,6 +11,6 @@ export const sdk = getSdk(
       'content-type': 'application/json',
       'x-hasura-admin-secret': `${HASURA_TOKEN || ''}`,
     },
-    fetch: fetch.bind(globalThis),
+    fetch: fetch,
   }),
 )
