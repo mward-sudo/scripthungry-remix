@@ -13,7 +13,7 @@
     "dev:codegen": "graphql-codegen --config codegen.yml -w",
     "dev:css": "postcss styles --base styles --dir app/styles -w",
     "dev:remix": "remix watch",
-    "dev:miniflare": "cross-env NODE_ENV=development miniflare ./build/index.js --watch -e .env",
+    "dev:miniflare": "cross-env NODE_ENV=development miniflare ./build/index.js --watch",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "cross-env NODE_ENV=production miniflare ./build/index.js",
     "typecheck": "tsc -b"
