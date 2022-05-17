@@ -2,8 +2,8 @@ import type {
   HeadersFunction,
   LoaderFunction,
   MetaFunction,
-} from '@remix-run/node'
-import { json } from '@remix-run/node'
+} from '@remix-run/cloudflare'
+import { json } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { motion } from 'framer-motion'
 import invariant from 'tiny-invariant'

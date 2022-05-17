@@ -106,9 +106,14 @@ const getImgBlur = async (
 ): Promise<string> => {
   const url = getImageUrl(imgName, 40, Math.ceil(40 * heighToWidthRatio), 200)
   // Using node typescript, Fetch image from url const and return the image response as a base64 encoded string.
-  const imageUrlData = await fetch(url)
-  const buffer = await imageUrlData.arrayBuffer()
-  const stringifiedBuffer = Buffer.from(buffer).toString('base64')
-  const contentType = imageUrlData.headers.get('content-type')
-  return `data:${contentType};base64,${stringifiedBuffer}`
+
+  const request = await fetch(url)
+  let string = ''
+  new Uint8Array(await request.arrayBuffer()).forEach((byte) => {
+    string += String.fromCharCode(byte)
+  })
+  string = btoa(string)
+
+  const contentType = request.headers.get('content-type')
+  return `data:${contentType};base64,${string}`
 }

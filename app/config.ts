@@ -1,5 +1,5 @@
 export const blog = {
-  postsPerPage: process.env.NODE_ENV === 'production' ? 5 : 2,
+  postsPerPage: 5,
 }
 
 export const site = {

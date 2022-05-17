@@ -2,8 +2,8 @@ import type {
   HeadersFunction,
   LoaderFunction,
   MetaFunction,
-} from '@remix-run/node'
-import { json } from '@remix-run/node'
+} from '@remix-run/cloudflare'
+import { json } from '@remix-run/cloudflare'
 import { useCatch, useLoaderData } from '@remix-run/react'
 import type { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
