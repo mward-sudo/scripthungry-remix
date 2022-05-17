@@ -1,8 +1,3 @@
-import type {
-  ErrorBoundaryComponent,
-  LoaderFunction,
-  MetaFunction,
-} from '@remix-run/cloudflare'
 import {
   Links,
   LiveReload,
@@ -15,7 +10,14 @@ import {
   useLocation,
 } from '@remix-run/react'
 import type { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import type {
+  ErrorBoundaryComponent,
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/server-runtime'
+import { json } from '@remix-run/server-runtime'
 import { AnimatePresence, motion } from 'framer-motion'
+import type { ReactNode } from 'react'
 
 import { Footer } from './components/footer'
 import { MobileDrawer } from './components/navigation/mobile-drawer'
@@ -69,12 +71,12 @@ export const loader: LoaderFunction = async () => {
     throw new Response('Failed to fetch navigation data', { status: 500 })
   })
 
-  return {
+  return json({
     navLinks: navigationData?.graphcms?.navigationLinks,
-  }
+  })
 }
 
-const Document = ({ children }: { children: React.ReactNode }) => (
+const Document = ({ children }: { children: ReactNode }) => (
   <html lang='en'>
     <head>
       <Meta />

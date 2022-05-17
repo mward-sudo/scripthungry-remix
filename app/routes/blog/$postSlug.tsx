@@ -1,10 +1,6 @@
-import type {
-  HeadersFunction,
-  LoaderFunction,
-  MetaFunction,
-} from '@remix-run/cloudflare'
-import { json } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
+import type { LoaderFunction, MetaFunction } from '@remix-run/server-runtime'
+import { json } from '@remix-run/server-runtime'
 import { motion } from 'framer-motion'
 import invariant from 'tiny-invariant'
 
@@ -22,10 +18,6 @@ import {
 import type { CloudinaryImageProps } from '~/lib/cloudinary'
 
 import { AuthorDetails } from './../../components/blog/author-details'
-
-export const headers: HeadersFunction = () => ({
-  'Cache-Control': 's-maxage=360, stale-while-revalidate=3600',
-})
 
 export const meta: MetaFunction = ({ data }: { data: LoaderData }) => ({
   title: `${data.postData.graphcms?.post?.title} | ${site.name} Blog`,

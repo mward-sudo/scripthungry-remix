@@ -1,0 +1,17 @@
+[build]
+command = "npm run build"
+publish = "public"
+
+[dev]
+command = "remix watch"
+port = 3000
+
+[[headers]]
+for = "/build/*"
+
+[headers.values]
+cache-control = '''
+  max-age=0,
+  no-cache,
+  no-store,
+  must-revalidate'''

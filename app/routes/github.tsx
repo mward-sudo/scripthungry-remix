@@ -1,11 +1,11 @@
+import { useCatch, useLoaderData } from '@remix-run/react'
+import type { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import type {
   HeadersFunction,
   LoaderFunction,
   MetaFunction,
-} from '@remix-run/cloudflare'
-import { json } from '@remix-run/cloudflare'
-import { useCatch, useLoaderData } from '@remix-run/react'
-import type { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+} from '@remix-run/server-runtime'
+import { json } from '@remix-run/server-runtime'
 import { motion } from 'framer-motion'
 
 import { LoadNewUser } from '~/components/github-stats/load-new-user'
@@ -15,7 +15,6 @@ import { fadeInLeft } from '~/lib/animations'
 import { getGithubPageTitle, getGithubUser } from '~/lib/github.server'
 
 export const headers: HeadersFunction = () => ({
-  'Cache-Control': 's-maxage=360, stale-while-revalidate=3600',
   Link: '<https://avatars.githubusercontent.com>; rel="preconnect"',
 })
 
