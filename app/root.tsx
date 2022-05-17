@@ -2,7 +2,7 @@ import type {
   ErrorBoundaryComponent,
   LoaderFunction,
   MetaFunction,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import {
   Links,
   LiveReload,
@@ -64,7 +64,8 @@ type LoaderData = {
 }
 
 export const loader: LoaderFunction = async () => {
-  const navigationData = await sdk.GetNavigation().catch(() => {
+  const navigationData = await sdk.GetNavigation().catch((error) => {
+    console.log(error)
     throw new Response('Failed to fetch navigation data', { status: 500 })
   })
 
