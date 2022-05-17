@@ -1,16 +1,8 @@
 node_modules
 
-.cache
-.env
-.vercel
-.output
-.node-version
-
-/build/
-/public/build
-/api/index.js
-/api/index.js.map
-
+/.cache
 /app/styles/app.css
-
+/public/build
+/.netlify
+.env
 codegen.yml
