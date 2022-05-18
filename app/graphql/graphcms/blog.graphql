@@ -1,4 +1,4 @@
-query Category($category: String!) {
+query Category($category: String!) @cached(ttl: 300) {
   graphcms {
     blogCategory(where: { slug: $category }) {
       name
@@ -6,7 +6,7 @@ query Category($category: String!) {
   }
 }
 
-query Categories {
+query Categories @cached(ttl: 300) {
   graphcms {
     blogCategories(orderBy: name_ASC) {
       slug
@@ -15,7 +15,8 @@ query Categories {
   }
 }
 
-query PostsExcerpts($postsPerPage: Int!, $skip: Int!, $category: String!) {
+query PostsExcerpts($postsPerPage: Int!, $skip: Int!, $category: String!)
+@cached(ttl: 300) {
   graphcms {
     posts(
       first: $postsPerPage
@@ -45,7 +46,7 @@ query PostsExcerpts($postsPerPage: Int!, $skip: Int!, $category: String!) {
   }
 }
 
-query PostSlugs {
+query PostSlugs @cached(ttl: 300) {
   graphcms {
     posts(stage: PUBLISHED, orderBy: date_DESC) {
       slug
@@ -54,7 +55,7 @@ query PostSlugs {
   }
 }
 
-query PostBySlug($slug: String!) {
+query PostBySlug($slug: String!) @cached(ttl: 300) {
   graphcms {
     post(where: { slug: $slug }, stage: PUBLISHED) {
       author {
