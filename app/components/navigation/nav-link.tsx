@@ -1,5 +1,6 @@
 import { NavLink as RemixNavLink } from '@remix-run/react'
 import type { ReactNode } from 'react'
+import { HiOutlineExternalLink } from 'react-icons/hi'
 
 export const NavLink = ({
   to,
@@ -14,7 +15,7 @@ export const NavLink = ({
     <li>
       {to.startsWith('http') ? (
         <a href={to} target='_blank' rel='noopener noreferrer'>
-          {children}
+          {children} <HiOutlineExternalLink />
         </a>
       ) : (
         <RemixNavLink to={to} prefetch='render' onClick={onClick}>
