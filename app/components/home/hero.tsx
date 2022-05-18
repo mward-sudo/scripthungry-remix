@@ -11,17 +11,15 @@ export const Hero = () => {
         </clipPath>
       </svg>
       <div className='hero flex flex-col gap-8 bg-base-200 bg-transparent p-8 xl:flex-row'>
-        <motion.video
-          autoPlay
-          muted
-          loop
-          playsInline
+        <motion.div
           className='hero-content h-[200px] w-[400px] flex-col object-cover p-0 drop-shadow-lg xl:flex-row'
           style={{ clipPath: 'url(#cloud-clip-path)' }}
           variants={fadeInRight}
         >
-          <source src='https://res.cloudinary.com/scripthungry-com-prog/video/upload/ac_none,c_scale,e_accelerate:-10,q_auto,vc_auto,f_auto,w_500/v1651437759/mixkit-flight-above-the-cloud-level-loop-video-32991-medium_upevqf.mp4' />
-        </motion.video>
+          <video autoPlay muted loop playsInline>
+            <source src='https://res.cloudinary.com/scripthungry-com-prog/video/upload/ac_none,c_scale,e_accelerate:-10,q_auto,vc_auto,f_auto,w_500/v1651437759/mixkit-flight-above-the-cloud-level-loop-video-32991-medium_upevqf.mp4' />
+          </video>
+        </motion.div>
         <div className='flex-1 bg-gradient-to-b from-orange-400 to-orange-600 bg-clip-text text-center'>
           <h1 className='m-0 mb-6 text-5xl font-bold text-transparent md:text-6xl lg:text-7xl 2xl:text-8xl'>
             <div className='mb-2 text-6xl md:text-7xl lg:text-8xl 2xl:text-9xl'>
