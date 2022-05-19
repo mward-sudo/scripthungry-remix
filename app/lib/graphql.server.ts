@@ -1,12 +1,13 @@
 import { GraphQLClient } from 'graphql-request'
 
+import { env } from '~/config.server'
 import { getSdk } from '~/generated/graphql.server'
 
 export const sdk = getSdk(
-  new GraphQLClient(Deno.env.get('HASURA_ENDPOINT') ?? '', {
+  new GraphQLClient(env.HASURA_ENPOINT ?? '', {
     headers: {
       'content-type': 'application/json',
-      'x-hasura-admin-secret': `${Deno.env.get('HASURA_TOKEN') || ''}`,
+      'x-hasura-admin-secret': `${env.HASURA_TOKEN || ''}`,
     },
     fetch: fetch,
   }),
