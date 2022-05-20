@@ -15,13 +15,15 @@ import type {
   PostsExcerptsQuery,
 } from '~/generated/graphql.server'
 import {
-  getBlogImagesData,
   getCategoriesData,
   getCategoryData,
-  getPageTitle,
   getPostExcerptData,
-  getTotalPages,
 } from '~/lib/blog.server'
+import {
+  getBlogImagesData,
+  getPageTitle,
+  getTotalPages,
+} from '~/lib/blog-utils.server'
 import type { CloudinaryImageProps } from '~/lib/cloudinary'
 
 import { BlogExcerpt } from './../../components/blog/blog-excerpt'

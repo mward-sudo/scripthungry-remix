@@ -1,8 +1,9 @@
 import { site } from '~/config'
-import { sdk } from '~/lib/graphql.server'
+import { getPostSlugs } from '~/lib/blog.server'
 
 const getBlogPosts = async (): Promise<string[]> => {
-  const postSlugs = await sdk.PostSlugs()
+  const postSlugs = await getPostSlugs()
+
   return (
     postSlugs.graphcms?.posts.map((post) => {
       return `

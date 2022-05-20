@@ -10,11 +10,11 @@ import { FullWidthEscape } from '~/components/full-width-escape'
 import { site } from '~/config'
 import type { PostBySlugQuery } from '~/generated/graphql.server'
 import { fadeInUp } from '~/lib/animations'
+import { getPostData } from '~/lib/blog.server'
 import {
   getPostAuthorImageProps,
-  getPostData,
   getPostImageProps,
-} from '~/lib/blog.server'
+} from '~/lib/blog-utils.server'
 import type { CloudinaryImageProps } from '~/lib/cloudinary'
 
 import { AuthorDetails } from './../../components/blog/author-details'

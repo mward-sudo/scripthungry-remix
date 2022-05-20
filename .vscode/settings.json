@@ -6,4 +6,5 @@
   "deno.enablePaths": ["app/config.server.ts"],
   "deno.lint": true,
   "deno.unstable": true,
+  "deno.codeLens.implementations": true
 }
