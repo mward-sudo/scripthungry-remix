@@ -1,80 +1,56 @@
-import { blog, site } from '~/config'
+import { blog } from '~/config'
 import type {
-  PostAuthorFragment,
+  CategoriesQuery,
+  CategoryQuery,
   PostsExcerptsQuery,
+  PostSlugsQuery,
 } from '~/generated/graphql.server'
 
 import type { PostBySlugQuery } from './../generated/graphql.server'
-import type { CloudinaryImageProps } from './cloudinary'
-import { getCloudinaryImageProps } from './cloudinary'
 import { sdk } from './graphql.server'
+import { redisClient } from './redis.server'
 
 export const getPostData = async ({ postSlug }: { postSlug: string }) => {
+  const cacheKey = `post-${postSlug}`
+  const cachedPost = await redisClient.get<PostBySlugQuery>(cacheKey)
+
+  return cachedPost || (await fetchPostData(postSlug, cacheKey))
+}
+
+const fetchPostData = async (postSlug: string, cacheKey: string) => {
   const postData = await sdk.PostBySlug({ slug: postSlug }).catch(() => {
     throw new Error('Error retreiving post')
   })
   if (!postData?.graphcms?.post) {
     throw new Response('No post found', { status: 404 })
   }
+  redisClient.set(cacheKey, postData, { ex: 60 * 60 * 24 }) // Cache for 1 day
   return postData
 }
 
-export const getBlogImagesData = async (
-  postExcerptData: PostsExcerptsQuery,
-) => {
-  return postExcerptData?.graphcms?.posts
-    ? await Promise.all<CloudinaryImageProps | undefined>(
-        postExcerptData.graphcms.posts.map(async (post) => {
-          if (post.coverImage) {
-            return await getCloudinaryImageProps({
-              alt: post.title || '',
-              height: post.coverImage.height || 9,
-              imgName: `graphcms/${post.coverImage.handle}`,
-              width: post.coverImage.width || 16,
-            })
-          }
-        }),
-      )
-    : []
-}
-
-export const getPostImageProps = async ({
-  postData,
-}: {
-  postData: PostBySlugQuery
-}) => {
-  return postData?.graphcms?.post?.coverImage
-    ? await getCloudinaryImageProps({
-        imgName: `graphcms/${postData?.graphcms?.post?.coverImage?.handle}`,
-        alt: postData.graphcms.post.title,
-        width: postData.graphcms.post.coverImage.width || 16,
-        height: postData.graphcms.post.coverImage.height || 9,
-      })
-    : null
-}
-
-export const getPostAuthorImageProps = async ({
-  postAuthor,
-}: {
-  postAuthor: PostAuthorFragment | undefined | null
-}) => {
-  return postAuthor?.picture?.handle
-    ? await getCloudinaryImageProps({
-        imgName: `graphcms/${postAuthor.picture.handle}`,
-        alt: '',
-        width: 48,
-        height: 48,
-      })
-    : null
-}
-
 export const getCategoriesData = async () => {
-  return await sdk.Categories().catch(() => {
+  const cacheKey = 'categories'
+  const cachedCategories = await redisClient.get<CategoriesQuery>(cacheKey)
+
+  return cachedCategories || (await fetchCategoriesData(cacheKey))
+}
+
+const fetchCategoriesData = async (cacheKey: string) => {
+  const categoriesData = await sdk.Categories().catch(() => {
     throw new Error('Error getting categories data')
   })
+  redisClient.set(cacheKey, categoriesData, { ex: 60 * 60 * 24 }) // Cache for 1 day
+  return categoriesData
 }
 
 export const getCategoryData = async (categorySlug: string) => {
+  const cacheKey = `category-${categorySlug}`
+  const cachedCategory = await redisClient.get<CategoryQuery>(cacheKey)
+
+  return cachedCategory || fetchCategoryData(categorySlug, cacheKey)
+}
+
+const fetchCategoryData = async (categorySlug: string, cacheKey: string) => {
   const category = categorySlug
     ? await sdk.Category({ category: categorySlug }).catch(() => {
         throw new Error('Error getting category info')
@@ -87,31 +63,30 @@ export const getCategoryData = async (categorySlug: string) => {
     })
   }
 
+  redisClient.set(cacheKey, category, { ex: 60 * 60 * 24 }) // Cache for 1 day
+
   return category
-}
-
-export const getPageTitle = ({
-  categoryName,
-  pageNo,
-}: {
-  categoryName: string
-  pageNo: number
-}) => {
-  const title: Record<number, string>[] = []
-  if (categoryName) {
-    title.push(categoryName)
-  }
-  if (pageNo > 1) {
-    title.push(`Page ${pageNo}`)
-  }
-  title.push(`${site.name} - Blog`)
-
-  return title.join(' | ')
 }
 
 export const getPostExcerptData = async (
   pageNo: number,
   categorySlug: string,
+) => {
+  const cacheKey = `posts-excerpts-${categorySlug}-${pageNo}`
+  const cachedPostsExcerpts = await redisClient.get<PostsExcerptsQuery>(
+    cacheKey,
+  )
+
+  return (
+    cachedPostsExcerpts ||
+    (await fetchPostExcerptData(pageNo, categorySlug, cacheKey))
+  )
+}
+
+const fetchPostExcerptData = async (
+  pageNo: number,
+  categorySlug: string,
+  cacheKey: string,
 ) => {
   const posts = await sdk
     .PostsExcerpts({
@@ -131,12 +106,21 @@ export const getPostExcerptData = async (
     throw new Response(message, { status: 404 })
   }
 
+  redisClient.set(cacheKey, posts, { ex: 60 * 60 * 24 }) // Cache for 1 day
+
   return posts
 }
 
-export const getTotalPages = (postExcerptData: PostsExcerptsQuery) => {
-  return postExcerptData?.graphcms
-    ? postExcerptData.graphcms?.postsConnection.aggregate.count /
-        blog.postsPerPage
-    : 1
+export const getPostSlugs = async () => {
+  const cacheKey = 'postSlugs'
+  const cachedPostSlugs = await redisClient.get<PostSlugsQuery>(cacheKey)
+
+  return cachedPostSlugs || (await fetchPostSlugs(cacheKey))
+}
+
+const fetchPostSlugs = async (cacheKey: string) => {
+  const postSlugs = await sdk.PostSlugs()
+  redisClient.set(cacheKey, postSlugs, { ex: 60 * 60 * 24 }) // Cache for 1 day
+
+  return postSlugs
 }

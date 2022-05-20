@@ -25,7 +25,7 @@ import { Nav } from './components/navigation/nav'
 import { site } from './config'
 import type { Graphcms_NavigationLink } from './generated/graphql.server'
 import { fadeInUp } from './lib/animations'
-import { sdk } from './lib/graphql.server'
+import { getNavLinks } from './lib/navigation.server'
 import styles from './styles/app.css'
 
 export const meta: MetaFunction = ({ location }) => ({
@@ -66,10 +66,7 @@ type LoaderData = {
 }
 
 export const loader: LoaderFunction = async () => {
-  const navigationData = await sdk.GetNavigation().catch((error) => {
-    console.log(error)
-    throw new Response('Failed to fetch navigation data', { status: 500 })
-  })
+  const navigationData = await getNavLinks()
 
   return json({
     navLinks: navigationData?.graphcms?.navigationLinks,

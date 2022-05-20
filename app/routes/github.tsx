@@ -32,7 +32,9 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url)
   const username = url.searchParams.get('github') ?? 'mward-sudo'
-  const githubUser = await getGithubUser(username)
+  const refreshCache = url.searchParams.get('refreshCache') === 'true'
+
+  const githubUser = await getGithubUser(username, refreshCache)
 
   const title = getGithubPageTitle({ user: githubUser })
   const description = githubUser.bio ?? ''
