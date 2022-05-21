@@ -74,9 +74,9 @@ export const loader: LoaderFunction = async ({ request }) => {
     categories,
     categoryName,
     pagination: {
-      currentUrl: request.url,
       pageNo,
       totalPages,
+      category: categorySlug,
     },
     postExcerpts,
     title,

@@ -1,9 +1,9 @@
 import { Link } from '@remix-run/react'
 
 export type PaginationDetails = {
-  currentUrl: string
   pageNo: number
   totalPages: number
+  category: string | undefined
 }
 
 type PaginationProps = {
@@ -11,8 +11,8 @@ type PaginationProps = {
 }
 
 export const Pagination = ({ pagination }: PaginationProps) => {
-  const { currentUrl, pageNo, totalPages } = pagination
-  const paginationLinks = generatePageLinksArray(pageNo, totalPages, currentUrl)
+  const { pageNo, totalPages, category } = pagination
+  const paginationLinks = generatePageLinksArray(pageNo, totalPages, category)
 
   if (totalPages <= 1) {
     return null
@@ -55,21 +55,17 @@ type PaginationLink = {
 const generatePageLinksArray = (
   currentPage: number,
   totalPages: number,
-  currentUrl: string,
+  category: string | undefined,
 ): PaginationLink[] => {
-  const url = new URL(currentUrl)
   const prevPageNo = currentPage - 1
   const nextPageNo = currentPage + 1
 
   const getUrl = (pageNo: number) => {
-    if (pageNo === 1) {
-      if (url.searchParams.has('page')) {
-        url.searchParams.delete('page')
-      }
-    } else {
-      url.searchParams.set('page', String(pageNo))
-    }
-    return `${url.pathname}${url.search}`
+    const searchParams = new URLSearchParams()
+    pageNo > 1 && searchParams.set('page', String(pageNo))
+    category && searchParams.set('category', category)
+
+    return `?${searchParams.toString()}`
   }
 
   const previousLink: PaginationLink = {
