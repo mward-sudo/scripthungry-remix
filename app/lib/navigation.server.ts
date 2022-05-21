@@ -15,5 +15,7 @@ export const fetchNavLinks = async () => {
     throw new Response('Failed to fetch navigation data', { status: 500 })
   })
 
+  await redisClient.set('navLinks', navLinks, { ex: 60 * 60 * 24 })
+
   return navLinks
 }
