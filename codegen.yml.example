@@ -1,8 +1,8 @@
 overwrite: true
 schema: 
-  - https://scripthungry.hasura.app/v1/graphql:
+  - ${HASURA_ENDPOINT}:
       headers:
-        x-hasura-admin-secret: SECRET
+        x-hasura-admin-secret: ${HASURA_TOKEN}
 documents: "app/**/*.graphql"
 generates:
   app/generated/graphql.server.ts:
@@ -11,3 +11,4 @@ generates:
       - "typescript-operations"
       - "typescript-document-nodes"
       - "fragment-matcher"
+      - "typescript-graphql-request"

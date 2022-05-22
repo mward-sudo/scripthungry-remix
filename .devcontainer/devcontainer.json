@@ -1,0 +1,65 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.233.0/containers/typescript-node
+{
+	"name": "Node.js & TypeScript",
+	"build": {
+		"dockerfile": "Dockerfile",
+		// Update 'VARIANT' to pick a Node version: 18, 16, 14.
+		// Append -bullseye or -buster to pin to an OS version.
+		// Use -bullseye variants on local on arm64/Apple Silicon.
+		"args": { 
+			"VARIANT": "18-bullseye"
+		}
+	},
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"typescript.tsdk": "node_modules/typescript/lib",
+		"yaml.schemas": {
+			"https://json.schemastore.org/github-workflow.json": "file:///Users/michael/Dev/remix/scripthungry/.github/workflows/deploy.yml"
+		},
+		"deno.enablePaths": [
+			"app/config.server.ts"
+		],
+		"deno.lint": true,
+		"deno.unstable": true,
+		"deno.codeLens.implementations": true
+	},
+
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ambar.bundle-size",
+		"amimaro.remix-run-snippets",
+		"ark120202.vscode-typescript-pnp-plugin",
+		"bradlc.vscode-tailwindcss",
+		"bungcip.better-toml",
+		"cmstead.js-codeformer",
+		"christian-kohler.npm-intellisense",
+		"christian-kohler.path-intellisense",
+		"dbaeumer.vscode-eslint",
+		"denoland.vscode-deno",
+		"dsznajder.es7-react-js-snippets",
+		"esbenp.prettier-vscode",
+		"github.vscode-pull-request-github",
+		"graphql.vscode-graphql",
+		"macieklad.tailwind-sass-syntax",
+		"mikestead.dotenv",
+		"redhat.vscode-yaml"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [3000],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": [
+		"npm install",
+		"envsubst < codegen.yml.example > codegen.yml"
+	],
+
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "node",
+	"features": {
+		"git": "os-provided"
+	}
+}
