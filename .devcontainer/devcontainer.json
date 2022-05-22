@@ -45,7 +45,8 @@
 		"graphql.vscode-graphql",
 		"macieklad.tailwind-sass-syntax",
 		"mikestead.dotenv",
-		"redhat.vscode-yaml"
+		"redhat.vscode-yaml",
+		"GitHub.copilot"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
