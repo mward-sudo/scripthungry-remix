@@ -1,4 +1,4 @@
-query gitHubUser($username: String!) @cached(ttl: 300) {
+query gitHubUser($username: String!) {
   github {
     user(login: $username) {
       ...GithubUser

@@ -1,4 +1,4 @@
-query GetNavigation @cached(ttl: 300) {
+query GetNavigation {
   graphcms {
     navigationLinks {
       url
