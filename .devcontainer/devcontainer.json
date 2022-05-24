@@ -46,7 +46,8 @@
 		"macieklad.tailwind-sass-syntax",
 		"mikestead.dotenv",
 		"redhat.vscode-yaml",
-		"GitHub.copilot"
+		"GitHub.copilot",
+		"sburg.vscode-javascript-booster"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
