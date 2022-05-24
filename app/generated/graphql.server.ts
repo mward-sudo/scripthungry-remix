@@ -30457,7 +30457,7 @@ export const GithubUser = gql`
 }
     ${Repos}`;
 export const Category = gql`
-    query Category($category: String!) @cached(ttl: 300) {
+    query Category($category: String!) {
   graphcms {
     blogCategory(where: {slug: $category}) {
       name
@@ -30466,7 +30466,7 @@ export const Category = gql`
 }
     `;
 export const Categories = gql`
-    query Categories @cached(ttl: 300) {
+    query Categories {
   graphcms {
     blogCategories(orderBy: name_ASC) {
       slug
@@ -30476,7 +30476,7 @@ export const Categories = gql`
 }
     `;
 export const PostsExcerpts = gql`
-    query PostsExcerpts($postsPerPage: Int!, $skip: Int!, $category: String!) @cached(ttl: 300) {
+    query PostsExcerpts($postsPerPage: Int!, $skip: Int!, $category: String!) {
   graphcms {
     posts(
       first: $postsPerPage
@@ -30508,7 +30508,7 @@ export const PostsExcerpts = gql`
     ${PostAuthor}
 ${CoverImage}`;
 export const PostSlugs = gql`
-    query PostSlugs @cached(ttl: 300) {
+    query PostSlugs {
   graphcms {
     posts(stage: PUBLISHED, orderBy: date_DESC) {
       slug
@@ -30518,7 +30518,7 @@ export const PostSlugs = gql`
 }
     `;
 export const PostBySlug = gql`
-    query PostBySlug($slug: String!) @cached(ttl: 300) {
+    query PostBySlug($slug: String!) {
   graphcms {
     post(where: {slug: $slug}, stage: PUBLISHED) {
       author {
@@ -30541,7 +30541,7 @@ export const PostBySlug = gql`
 ${PostContent}
 ${CoverImage}`;
 export const GitHubUser = gql`
-    query gitHubUser($username: String!) @cached(ttl: 300) {
+    query gitHubUser($username: String!) {
   github {
     user(login: $username) {
       ...GithubUser
@@ -30550,7 +30550,7 @@ export const GitHubUser = gql`
 }
     ${GithubUser}`;
 export const GetNavigation = gql`
-    query GetNavigation @cached(ttl: 300) {
+    query GetNavigation {
   graphcms {
     navigationLinks {
       url
@@ -31649,7 +31649,7 @@ export const GithubUserFragmentDoc = gql`
 }
     ${ReposFragmentDoc}`;
 export const CategoryDocument = gql`
-    query Category($category: String!) @cached(ttl: 300) {
+    query Category($category: String!) {
   graphcms {
     blogCategory(where: {slug: $category}) {
       name
@@ -31658,7 +31658,7 @@ export const CategoryDocument = gql`
 }
     `;
 export const CategoriesDocument = gql`
-    query Categories @cached(ttl: 300) {
+    query Categories {
   graphcms {
     blogCategories(orderBy: name_ASC) {
       slug
@@ -31668,7 +31668,7 @@ export const CategoriesDocument = gql`
 }
     `;
 export const PostsExcerptsDocument = gql`
-    query PostsExcerpts($postsPerPage: Int!, $skip: Int!, $category: String!) @cached(ttl: 300) {
+    query PostsExcerpts($postsPerPage: Int!, $skip: Int!, $category: String!) {
   graphcms {
     posts(
       first: $postsPerPage
@@ -31700,7 +31700,7 @@ export const PostsExcerptsDocument = gql`
     ${PostAuthorFragmentDoc}
 ${CoverImageFragmentDoc}`;
 export const PostSlugsDocument = gql`
-    query PostSlugs @cached(ttl: 300) {
+    query PostSlugs {
   graphcms {
     posts(stage: PUBLISHED, orderBy: date_DESC) {
       slug
@@ -31710,7 +31710,7 @@ export const PostSlugsDocument = gql`
 }
     `;
 export const PostBySlugDocument = gql`
-    query PostBySlug($slug: String!) @cached(ttl: 300) {
+    query PostBySlug($slug: String!) {
   graphcms {
     post(where: {slug: $slug}, stage: PUBLISHED) {
       author {
@@ -31733,7 +31733,7 @@ export const PostBySlugDocument = gql`
 ${PostContentFragmentDoc}
 ${CoverImageFragmentDoc}`;
 export const GitHubUserDocument = gql`
-    query gitHubUser($username: String!) @cached(ttl: 300) {
+    query gitHubUser($username: String!) {
   github {
     user(login: $username) {
       ...GithubUser
@@ -31742,7 +31742,7 @@ export const GitHubUserDocument = gql`
 }
     ${GithubUserFragmentDoc}`;
 export const GetNavigationDocument = gql`
-    query GetNavigation @cached(ttl: 300) {
+    query GetNavigation {
   graphcms {
     navigationLinks {
       url
