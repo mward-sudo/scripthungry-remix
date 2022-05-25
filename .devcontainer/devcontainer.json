@@ -47,7 +47,8 @@
 		"mikestead.dotenv",
 		"redhat.vscode-yaml",
 		"GitHub.copilot",
-		"sburg.vscode-javascript-booster"
+		"sburg.vscode-javascript-booster",
+		"afzalsayed96.reacticons"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

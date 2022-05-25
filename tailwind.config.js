@@ -1,7 +1,9 @@
 module.exports = {
   content: ['./app/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    fontFamily: {
+      brand: ['BIZ UDPGothic'],
+    },
   },
   daisyui: {
     themes: ['dark'],
@@ -10,7 +12,6 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/line-clamp'),
-    require('@tailwindcss/aspect-ratio'),
     require('daisyui'),
   ],
 }
