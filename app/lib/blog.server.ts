@@ -33,7 +33,7 @@ const fetchPostData = async (postSlug: string, cacheKey: string) => {
   if (!postData?.graphcms?.post) {
     throw new Response('No post found', { status: 404 })
   }
-  redisClient.set(cacheKey, postData, { ex: 60 * 60 * 24 }) // Cache for 1 day
+  redisClient.set(cacheKey, postData, { ex: 60 * 60 * 24 * 30 }) // Cache for 30 days
   return postData
 }
 
@@ -50,7 +50,7 @@ const fetchCategoriesData = async (cacheKey: string) => {
   const categoriesData = await sdk.Categories().catch(() => {
     throw new Error('Error getting categories data')
   })
-  redisClient.set(cacheKey, categoriesData, { ex: 60 * 60 * 24 }) // Cache for 1 day
+  redisClient.set(cacheKey, categoriesData, { ex: 60 * 60 * 24 * 30 }) // Cache for 30 days
   return categoriesData
 }
 
@@ -79,7 +79,7 @@ const fetchCategoryData = async (categorySlug: string, cacheKey: string) => {
     })
   }
 
-  redisClient.set(cacheKey, category, { ex: 60 * 60 * 24 }) // Cache for 1 day
+  redisClient.set(cacheKey, category, { ex: 60 * 60 * 24 * 30 }) // Cache for 30 days
 
   return category
 }
@@ -122,7 +122,7 @@ const fetchPostExcerptData = async (
     throw new Response(message, { status: 404 })
   }
 
-  redisClient.set(cacheKey, posts, { ex: 60 * 60 * 24 }) // Cache for 1 day
+  redisClient.set(cacheKey, posts, { ex: 60 * 60 * 24 * 30 }) // Cache for 30 days
 
   return posts
 }
@@ -138,7 +138,7 @@ export const getPostSlugs = async (refreshCache = false) => {
 
 const fetchPostSlugs = async (cacheKey: string) => {
   const postSlugs = await sdk.PostSlugs()
-  redisClient.set(cacheKey, postSlugs, { ex: 60 * 60 * 24 }) // Cache for 1 day
+  redisClient.set(cacheKey, postSlugs, { ex: 60 * 60 * 24 * 30 }) // Cache for 30 days
 
   return postSlugs
 }
