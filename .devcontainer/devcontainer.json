@@ -48,17 +48,15 @@
 		"redhat.vscode-yaml",
 		"GitHub.copilot",
 		"sburg.vscode-javascript-booster",
-		"afzalsayed96.reacticons"
+		"afzalsayed96.reacticons",
+		"GraphQL.vscode-graphql"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [3000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": [
-		"pnpm install",
-		"envsubst < codegen.yml.example > codegen.yml"
-	],
+	"postCreateCommand": "pnpm install && envsubst < codegen.yml.example > codegen.yml && envsubst < .graphqlrc.yml.example > .graphqlrc.yml",
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "node",

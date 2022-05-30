@@ -1,0 +1,5 @@
+schema:
+- ${HASURA_ENDPOINT}:
+    headers:
+      x-hasura-admin-secret: ${HASURA_TOKEN}
+      
