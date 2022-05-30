@@ -56,7 +56,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": [
-		"npm install",
+		"pnpm install",
 		"envsubst < codegen.yml.example > codegen.yml"
 	],
 
