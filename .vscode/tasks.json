@@ -2,11 +2,11 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Run npm dev on startup",
+      "label": "Run pnpm dev on startup",
       "type": "shell",
-      "command": "npm run dev",
+      "command": "pnpm run dev",
       "windows": {
-        "command": "npm run dev"
+        "command": "pnpm run dev"
       },
       "presentation": {
         "reveal": "always",
