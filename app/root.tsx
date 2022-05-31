@@ -39,12 +39,6 @@ export const meta: MetaFunction = ({ location }) => ({
 
 export const links = () => {
   return [
-    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: null },
-    {
-      rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@700&display=swap',
-    },
     { rel: 'stylesheet', href: styles },
     {
       rel: 'apple-touch-icon',

@@ -2,7 +2,8 @@ module.exports = {
   content: ['./app/**/*.{js,ts,jsx,tsx}'],
   theme: {
     fontFamily: {
-      brand: ['BIZ UDPGothic'],
+      'brand-normal': ['BIZ UDPGothic Normal'],
+      'brand-bold': ['BIZ UDPGothic Bold'],
     },
   },
   daisyui: {
