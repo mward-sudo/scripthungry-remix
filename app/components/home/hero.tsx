@@ -5,7 +5,7 @@ export const Hero = () => {
         <div className='flex flex-1 flex-col justify-center'>
           <div className='mt-[.45em] h-[2px] flex-grow-0 bg-gradient-to-bl from-yellow-700 via-yellow-300 to-yellow-700'></div>
         </div>
-        <h1 className='m-0 inline-block font-brand leading-none'>
+        <h1 className='m-0 inline-block font-brand-bold font-bold leading-none'>
           <span className='bg-gradient-to-bl from-yellow-700 via-yellow-300 to-yellow-700 bg-clip-text font-normal text-transparent'>
             scriptHungry
           </span>
