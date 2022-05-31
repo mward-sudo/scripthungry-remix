@@ -18,7 +18,7 @@ export const NavLink = ({
           {children} <HiOutlineExternalLink />
         </a>
       ) : (
-        <RemixNavLink to={to} prefetch='render' onClick={onClick}>
+        <RemixNavLink to={to} prefetch='intent' onClick={onClick}>
           {children}
         </RemixNavLink>
       )}
