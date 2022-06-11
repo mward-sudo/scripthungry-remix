@@ -29,14 +29,17 @@ export const convertCurrency = async (
 ): Promise<CurrencyConversionResult> => {
   const url = `https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${value}&places=2`
   const request = new Request(url)
-  const response = await fetch(request)
-  const data: ConvertApiResponse = await response.json()
-
-  return {
-    from: data.query.from,
-    to: data.query.to,
-    fromAmount: convertToCurrencyString(data.query.amount),
-    toAmount: convertToCurrencyString(data.result),
+  try {
+    const response = await fetch(request)
+    const data: ConvertApiResponse = await response.json()
+    return {
+      from: data.query.from,
+      to: data.query.to,
+      fromAmount: convertToCurrencyString(data.query.amount),
+      toAmount: convertToCurrencyString(data.result),
+    }
+  } catch (error) {
+    throw new Error(`Failed to fetch currency conversion. ${error}`)
   }
 }
 
@@ -67,8 +70,12 @@ type CurrencySymbolsApiResponse = {
 export const getCurrencySymbols = async (): Promise<CurrencySymbols> => {
   const url = 'https://api.exchangerate.host/symbols'
   const request = new Request(url)
-  const response = await fetch(request)
-  const data: CurrencySymbolsApiResponse = await response.json()
+  try {
+    const response = await fetch(request)
+    const data: CurrencySymbolsApiResponse = await response.json()
 
-  return data.symbols
+    return data.symbols
+  } catch (error) {
+    throw new Error(`Failed to fetch currency symbols. ${error}`)
+  }
 }

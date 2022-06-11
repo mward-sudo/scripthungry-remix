@@ -1,19 +1,22 @@
-import { Form, useLoaderData } from '@remix-run/react'
+import {
+  Outlet,
+  useCatch,
+  useLoaderData,
+  useOutletContext,
+} from '@remix-run/react'
 import type { LoaderFunction } from '@remix-run/server-runtime'
 import { json } from '@remix-run/server-runtime'
-import { BsCashCoin } from 'react-icons/bs'
-import { HiSwitchHorizontal } from 'react-icons/hi'
+import type { CatchBoundaryComponent } from '@remix-run/server-runtime/routeModules'
 
+import { CurrencyConversionForm } from '~/components/currency/conversion-form'
 import type {
   CurrencyConversionResult,
   CurrencySymbols,
 } from '~/lib/currency.server'
-import { getCurrencySymbols } from '~/lib/currency.server'
 import { convertCurrency } from '~/lib/currency.server'
 
 type LoaderData = {
   currencyConversion: CurrencyConversionResult
-  currencySymbols: CurrencySymbols
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -22,70 +25,39 @@ export const loader: LoaderFunction = async ({ request }) => {
   const to = url.searchParams.get('to') ?? 'USD'
   const fromAmount = url.searchParams.get('fromAmount') ?? '1.00'
 
-  const [currencyConversion, currencySymbols] = await Promise.all([
-    await convertCurrency(fromAmount, from, to),
-    await getCurrencySymbols(),
-  ])
+  const currencyConversion = await convertCurrency(fromAmount, from, to)
+
+  if (currencyConversion.toAmount === '0.00') {
+    throw new Response(
+      'Your conversion resulted in 0.00, there has probably been an error',
+      { status: 400 },
+    )
+  }
 
   const data: LoaderData = {
     currencyConversion,
-    currencySymbols,
   }
 
   return json(data)
 }
 
 const CurrencyConverterRoute = () => {
-  const { currencyConversion, currencySymbols } = useLoaderData<LoaderData>()
+  const { currencyConversion } = useLoaderData<LoaderData>()
   const { from, to, fromAmount, toAmount } = currencyConversion
+
+  const { currencySymbols } = useOutletContext<{
+    currencySymbols: CurrencySymbols
+  }>()
 
   return (
     <div>
-      <div className='text-center text-7xl mt-8 hidden md:block'>
-        <BsCashCoin className='inline-block' />
-      </div>
-      <Form className='form-control w-full not-prose items-center mt-8 flex-col md:flex-row gap-2 justify-center'>
-        <label className='input-group input-group-lg w-fit'>
-          <span>Amount</span>
-          <input
-            type='text'
-            name='fromAmount'
-            defaultValue={fromAmount}
-            className='input input-bordered focus:outline-none w-40'
-          />
-        </label>
-        <label className='input-group input-group-lg w-fit'>
-          <span>from</span>
-          <select
-            name='from'
-            defaultValue={from}
-            className='select select-bordered focus:outline-none w-48'
-          >
-            {Object.entries(currencySymbols).map(([key, symbol]) => (
-              <option key={key} value={key}>
-                ({key}) {symbol.description}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className='input-group input-group-lg w-fit'>
-          <span>to</span>
-          <select
-            name='to'
-            defaultValue={to}
-            className='select select-bordered focus:outline-none w-48'
-          >
-            {Object.entries(currencySymbols).map(([key, symbol]) => (
-              <option key={key} value={key}>
-                ({key}) {symbol.description}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button type='submit' className='btn btn-primary ml-4'>
-          <HiSwitchHorizontal className='mr-2' /> Convert
-        </button>
-      </Form>
+      <CurrencyConversionForm
+        fromAmount={fromAmount}
+        from={from}
+        currencySymbols={currencySymbols}
+        to={to}
+      />
+      <Outlet />
       <p className='text-5xl md:text-7xl text-center'>
         <span className='text-purple-400 font-bold'>
           {fromAmount} {from}
@@ -96,6 +68,42 @@ const CurrencyConverterRoute = () => {
         </span>
       </p>
     </div>
+  )
+}
+
+export const CatchBoundary: CatchBoundaryComponent = () => {
+  const caught = useCatch()
+  const { currencySymbols } = useOutletContext<{
+    currencySymbols: CurrencySymbols
+  }>()
+
+  return (
+    <>
+      <CurrencyConversionForm
+        fromAmount='1.00'
+        from='GBP'
+        currencySymbols={currencySymbols}
+        to='USD'
+      />
+      <div className='alert alert-error mt-8 justify-center text-2xl shadow-lg'>
+        <div>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className='h-6 w-6 flex-shrink-0 stroke-current'
+            fill='none'
+            viewBox='0 0 24 24'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth='2'
+              d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+            />
+          </svg>
+          <p className='m-4 my-0'>{caught.data}</p>
+        </div>
+      </div>
+    </>
   )
 }
 
