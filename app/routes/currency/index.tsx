@@ -4,11 +4,16 @@ import { json } from '@remix-run/server-runtime'
 import { BsCashCoin } from 'react-icons/bs'
 import { HiSwitchHorizontal } from 'react-icons/hi'
 
-import type { CurrencyConversionResult } from '~/lib/currency.server'
+import type {
+  CurrencyConversionResult,
+  CurrencySymbols,
+} from '~/lib/currency.server'
+import { getCurrencySymbols } from '~/lib/currency.server'
 import { convertCurrency } from '~/lib/currency.server'
 
 type LoaderData = {
   currencyConversion: CurrencyConversionResult
+  currencySymbols: CurrencySymbols
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -17,17 +22,21 @@ export const loader: LoaderFunction = async ({ request }) => {
   const to = url.searchParams.get('to') ?? 'USD'
   const fromAmount = url.searchParams.get('fromAmount') ?? '1.00'
 
-  const currencyConversion = await convertCurrency(fromAmount, from, to)
+  const [currencyConversion, currencySymbols] = await Promise.all([
+    await convertCurrency(fromAmount, from, to),
+    await getCurrencySymbols(),
+  ])
 
   const data: LoaderData = {
     currencyConversion,
+    currencySymbols,
   }
 
   return json(data)
 }
 
 const CurrencyConverterRoute = () => {
-  const { currencyConversion } = useLoaderData<LoaderData>()
+  const { currencyConversion, currencySymbols } = useLoaderData<LoaderData>()
   const { from, to, fromAmount, toAmount } = currencyConversion
 
   return (
@@ -42,7 +51,7 @@ const CurrencyConverterRoute = () => {
             type='text'
             name='fromAmount'
             defaultValue={fromAmount}
-            className='input input-bordered focus:outline-none'
+            className='input input-bordered focus:outline-none w-40'
           />
         </label>
         <label className='input-group input-group-lg w-fit'>
@@ -50,11 +59,13 @@ const CurrencyConverterRoute = () => {
           <select
             name='from'
             defaultValue={from}
-            className='select select-bordered focus:outline-none'
+            className='select select-bordered focus:outline-none w-48'
           >
-            <option value='GBP'>GBP</option>
-            <option value='USD'>USD</option>
-            <option value='EUR'>EUR</option>
+            {Object.entries(currencySymbols).map(([key, symbol]) => (
+              <option key={key} value={key}>
+                ({key}) {symbol.description}
+              </option>
+            ))}
           </select>
         </label>
         <label className='input-group input-group-lg w-fit'>
@@ -62,11 +73,13 @@ const CurrencyConverterRoute = () => {
           <select
             name='to'
             defaultValue={to}
-            className='select select-bordered focus:outline-none'
+            className='select select-bordered focus:outline-none w-48'
           >
-            <option value='GBP'>GBP</option>
-            <option value='USD'>USD</option>
-            <option value='EUR'>EUR</option>
+            {Object.entries(currencySymbols).map(([key, symbol]) => (
+              <option key={key} value={key}>
+                ({key}) {symbol.description}
+              </option>
+            ))}
           </select>
         </label>
         <button type='submit' className='btn btn-primary ml-4'>

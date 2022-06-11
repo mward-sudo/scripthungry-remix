@@ -47,3 +47,28 @@ const convertToCurrencyString = (value: string, locale = 'en-GB') => {
     maximumFractionDigits: 2,
   }).format(valueAsNumber)
 }
+
+export type CurrencySymbols = {
+  [key: string]: {
+    description: string
+    code: string
+  }
+}
+
+type CurrencySymbolsApiResponse = {
+  motd: {
+    msg: string
+    url: string
+  }
+  success: boolean
+  symbols: CurrencySymbols
+}
+
+export const getCurrencySymbols = async (): Promise<CurrencySymbols> => {
+  const url = 'https://api.exchangerate.host/symbols'
+  const request = new Request(url)
+  const response = await fetch(request)
+  const data: CurrencySymbolsApiResponse = await response.json()
+
+  return data.symbols
+}
