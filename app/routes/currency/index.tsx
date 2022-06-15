@@ -7,8 +7,11 @@ import {
 import type { LoaderFunction } from '@remix-run/server-runtime'
 import { json } from '@remix-run/server-runtime'
 import type { CatchBoundaryComponent } from '@remix-run/server-runtime/routeModules'
+import { motion } from 'framer-motion'
+import { HiSwitchHorizontal } from 'react-icons/hi'
 
 import { CurrencyConversionForm } from '~/components/currency/conversion-form'
+import { fadeInLeft, fadeInRight } from '~/lib/animations'
 import type {
   CurrencyConversionResult,
   CurrencySymbols,
@@ -59,13 +62,23 @@ const CurrencyConverterRoute = () => {
       />
       <Outlet />
       <p className='text-5xl md:text-7xl text-center'>
-        <span className='text-purple-400 font-bold'>
+        <motion.span
+          className='inline-block text-purple-400 font-bold'
+          variants={fadeInRight}
+        >
           {fromAmount} {from}
-        </span>{' '}
-        ={' '}
-        <span className='text-green-500 font-bold'>
+        </motion.span>{' '}
+        <HiSwitchHorizontal
+          alignmentBaseline='text-before-edge'
+          className='inline-block'
+        />{' '}
+        <span className='sr-only'>equals</span>{' '}
+        <motion.span
+          className='inline-block text-green-500 font-bold'
+          variants={fadeInLeft}
+        >
           {toAmount} {to}
-        </span>
+        </motion.span>
       </p>
     </div>
   )
