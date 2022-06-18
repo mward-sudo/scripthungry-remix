@@ -10,16 +10,21 @@ import type { CatchBoundaryComponent } from '@remix-run/server-runtime/routeModu
 import { motion } from 'framer-motion'
 import { HiSwitchHorizontal } from 'react-icons/hi'
 
+import { Chart } from '~/components/currency/chart'
 import { CurrencyConversionForm } from '~/components/currency/conversion-form'
 import { fadeInLeft, fadeInRight } from '~/lib/animations'
 import type {
   CurrencyConversionResult,
+  CurrencyHistoryData,
   CurrencySymbols,
 } from '~/lib/currency.server'
+import { getCurrencyTimeSeries } from '~/lib/currency.server'
 import { convertCurrency } from '~/lib/currency.server'
+import { convertDateToIsoString } from '~/lib/date-utils.server'
 
 type LoaderData = {
   currencyConversion: CurrencyConversionResult
+  currencyHistory: CurrencyHistoryData[]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -27,8 +32,17 @@ export const loader: LoaderFunction = async ({ request }) => {
   const from = url.searchParams.get('from') ?? 'GBP'
   const to = url.searchParams.get('to') ?? 'USD'
   const fromAmount = url.searchParams.get('fromAmount') ?? '1.00'
+  // Today's date in ISO format
+  const endDate = convertDateToIsoString(new Date())
+  // The date 365 days ago in ISO format
+  const startDate = convertDateToIsoString(
+    new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+  )
 
-  const currencyConversion = await convertCurrency(fromAmount, from, to)
+  const [currencyConversion, currencyHistory] = await Promise.all([
+    await convertCurrency(fromAmount, from, to),
+    await getCurrencyTimeSeries({ startDate, endDate, from, to }),
+  ])
 
   if (currencyConversion.toAmount === '0.00') {
     throw new Response(
@@ -39,13 +53,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const data: LoaderData = {
     currencyConversion,
+    currencyHistory,
   }
 
   return json(data)
 }
 
 const CurrencyConverterRoute = () => {
-  const { currencyConversion } = useLoaderData<LoaderData>()
+  const { currencyConversion, currencyHistory } = useLoaderData<LoaderData>()
   const { from, to, fromAmount, toAmount } = currencyConversion
 
   const { currencySymbols } = useOutletContext<{
@@ -80,6 +95,10 @@ const CurrencyConverterRoute = () => {
           {toAmount} {to}
         </motion.span>
       </p>
+      <h2 className='text-center'>One year history</h2>
+      <div>
+        <Chart data={currencyHistory} />
+      </div>
     </div>
   )
 }

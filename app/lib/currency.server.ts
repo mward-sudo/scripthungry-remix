@@ -27,7 +27,7 @@ export const convertCurrency = async (
   from: string,
   to: string,
 ): Promise<CurrencyConversionResult> => {
-  const url = `https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${value}&places=2`
+  const url = `https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${value}`
   const request = new Request(url)
   try {
     const response = await fetch(request)
@@ -47,7 +47,7 @@ const convertToCurrencyString = (value: string, locale = 'en-GB') => {
   const valueAsNumber = Number(value)
   return new Intl.NumberFormat(locale, {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 20,
   }).format(valueAsNumber)
 }
 
@@ -77,5 +77,62 @@ export const getCurrencySymbols = async (): Promise<CurrencySymbols> => {
     return data.symbols
   } catch (error) {
     throw new Error(`Failed to fetch currency symbols. ${error}`)
+  }
+}
+
+type RateSeries = Record<string, Record<string, number>>
+
+type CurrencyTimeSeriesResult = {
+  motd: {
+    msg: string
+    url: string
+  }
+  success: boolean
+  timeseries: boolean
+  base: string
+  start_date: string
+  end_date: string
+  rates: RateSeries
+}
+
+type GetCurrencyTimeSeriesParams = {
+  startDate: string
+  endDate: string
+  from: string
+  to: string
+}
+
+interface GetCurrencyTimeSeries {
+  ({ startDate, endDate, from, to }: GetCurrencyTimeSeriesParams): Promise<
+    CurrencyHistoryData[]
+  >
+}
+
+export type CurrencyHistoryData = { date: string; value: number }
+
+export const getCurrencyTimeSeries: GetCurrencyTimeSeries = async ({
+  startDate,
+  endDate,
+  from,
+  to,
+}) => {
+  const url = `https://api.exchangerate.host/timeseries?start_date=${startDate}&end_date=${endDate}&base=${from}&symbols=${to}`
+  const request = new Request(url)
+
+  try {
+    const response = await fetch(request)
+    const data: CurrencyTimeSeriesResult = await response.json()
+
+    const ratesChartData: CurrencyHistoryData[] = Object.entries(
+      data.rates,
+    ).map(([date, value]) => ({
+      // Date string to Date object
+      date: date,
+      value: value[to],
+    }))
+
+    return ratesChartData
+  } catch (error) {
+    throw new Error(`Failed to fetch currency time series. ${error}`)
   }
 }
