@@ -24,7 +24,6 @@ import { MobileDrawer } from './components/navigation/mobile-drawer'
 import { Nav } from './components/navigation/nav'
 import { site } from './config'
 import type { Graphcms_NavigationLink } from './generated/graphql.server'
-import { fadeInUp } from './lib/animations'
 import { getNavLinks } from './lib/navigation.server'
 import styles from './styles/app.css'
 
@@ -101,7 +100,6 @@ export const App = () => {
             <div className='prose max-w-none flex-1 p-2'>
               <AnimatePresence exitBeforeEnter>
                 <motion.div
-                  variants={fadeInUp}
                   initial='initial'
                   animate='animate'
                   key={useLocation().key}
